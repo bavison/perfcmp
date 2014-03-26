@@ -123,7 +123,7 @@ def transpose(matrix):
     nums = nums.transpose()
     return nums.tolist()
 
-def MAD(row):
+def MAD(row, label):
     """
     Use a calculation of the median of the absolute difference to remove any
     outlying data points from the row.
@@ -139,7 +139,7 @@ def MAD(row):
     diffs  = [(x / median) for x in diffs]
     row    = [x for i, x in enumerate(row) if diffs[i] < 5]
     if size != len(row):
-        vprint("Removed " + str(size - len(row)) + " outliers")
+        vprint("Removed " + str(size - len(row)) + " outliers from " + label)
 
     return row
 
@@ -248,9 +248,9 @@ if __name__ == "__main__":
 
     # Strip out any outlying data points
     vprint("Check for outliers in 'before' data...")
-    old_data = [MAD(row) for row in old_data]
+    old_data = [MAD(row, labels[idx]) for idx, row in enumerate(old_data)]
     vprint("Check for outliers in 'after' data...")
-    new_data = [MAD(row) for row in new_data]
+    new_data = [MAD(row, labels[idx]) for idx, row in enumerate(new_data)]
     vprint("")
 
     # Calculate some statistics for each of the tests
