@@ -278,8 +278,8 @@ if __name__ == "__main__":
     max_str = str(max_len)
 
     fmt = "{0:<" + max_str + "}{1}"
-    print(fmt.format(" ", "Before          After"))
-    print(fmt.format(" ", "Mean   StdDev   Mean   StdDev  Confidence  Change"))
+    print(fmt.format(" ", "   Before          After"))
+    print(fmt.format(" ", "  Mean StdDev     Mean StdDev   Confidence   Change"))
 
     #for idx, val in enumerate(labels):
     #    results[idx]['label'] = val
@@ -288,24 +288,14 @@ if __name__ == "__main__":
         results = sorted(results, key=itemgetter('dpcnt'), reverse=not options.reverse)
 
     for idx, values in enumerate(results):
-        # Formatted confidence level
-        conf   = "{0:6.1f}".format(values['conf'])
-        conf   = conf.strip()
-        conf  += "%"
-
-        # Formatted change percentage (+ve or -ve)
-        change = "{0:6.1f}".format(values['dpcnt'])
-        change = change.strip()
-        change = ("+" if values['dpcnt'] >= 0 else "") + change + "%"
-
         # Significance estimate
         sig = ""
         if values['conf'] < options.min_conf:
             sig = "  (insignificant)"
 
         if not options.short or (values['conf'] >= options.min_conf):
-            fmt = "{0:<" + max_str + "}{1:<6.1f} {2:<6.1f}   {3:<6.1f} {4:<6.1f}  {5:<6}      {6}{7}"
-            print(fmt.format(values['label'], values['omean'], values['ostd'], values['nmean'], values['nstd'], conf, change, sig))
+            fmt = "{0:<" + max_str + "}{1:6.1f} {2:6.1f}   {3:6.1f} {4:6.1f}  {5:8.2f}%  {6:+8.1f}%{7}"
+            print(fmt.format(values['label'], values['omean'], values['ostd'], values['nmean'], values['nstd'], values['conf'], values['dpcnt'], sig))
 
         # Output to the CSV file
         if fd:
