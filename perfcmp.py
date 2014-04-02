@@ -41,6 +41,7 @@ min_conf   = 99.0
 
 labels     = [ "L1", "L2", "M", "HT", "VT", "R", "RT" ]
 hit_text   = False # Yuck! This is a lot easier in Python 3 using nonlocal
+max_outliers = 0
 
 def vprint(str):
     if options.verbose:
@@ -128,6 +129,7 @@ def MAD(row, label):
     Use a calculation of the median of the absolute difference to remove any
     outlying data points from the row.
     """
+    global max_outliers
     size   = len(row)
     #print "size", size
     median = numpy.median(row)
@@ -140,6 +142,7 @@ def MAD(row, label):
     row    = [x for i, x in enumerate(row) if diffs[i] < 5]
     if size != len(row):
         vprint("Removed " + str(size - len(row)) + " outliers from " + label)
+    max_outliers = max(max_outliers, size - len(row))
 
     return row
 
@@ -295,6 +298,8 @@ if __name__ == "__main__":
                 (values['label'], values['omean'], values['ostd'], values['nmean'], \
                 values['nstd'], values['dpcnt'], values['dmean'], values['conf'], values['tval'])
             fd.write(outstr)
+
+    print("\nAt most {0:d} outliers rejected per test per set.".format(max_outliers))
 
     if fd:
         fd.close()
