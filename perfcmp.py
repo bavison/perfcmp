@@ -289,7 +289,7 @@ if __name__ == "__main__":
             sig = "  (insignificant)"
 
         if not options.short or (values['conf'] >= options.min_conf):
-            fmt = "{0:<" + max_str + "}{1:6.1f} {2:6.1f}   {3:6.1f} {4:6.1f}  {5:8.2f}%  {6:+8.1f}%{7}"
+            fmt = "{0:<" + max_str + "}{1:6.1f} {2:6.2f}   {3:6.1f} {4:6.2f}  {5:8.2f}%  {6:+8.1f}%{7}"
             print(fmt.format(values['label'], values['omean'], values['ostd'], values['nmean'], values['nstd'], values['conf'], values['dpcnt'], sig))
 
         # Output to the CSV file
