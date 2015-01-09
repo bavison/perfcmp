@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 #
-# Copyright © 2013 RISC OS Open Ltd
+# Copyright © 2013-2015 RISC OS Open Ltd
 #
 # Permission to use, copy, modify, distribute, and sell this software and its
 # documentation for any purpose is hereby granted without fee, provided that
@@ -31,6 +31,10 @@ from scipy import stats
 from operator import itemgetter
 from math import sqrt
 from optparse import OptionParser
+
+# scipy's t-test function now outputs an annoying warning about scipy's mean function being deprecated
+import warnings
+warnings.simplefilter('ignore',DeprecationWarning)
 
 options    = None
 min_conf   = 99.0
@@ -171,7 +175,10 @@ def compare(old_stats, old_data, new_stats, new_data):
         else:
             mean_diff = new['mean'] - old['mean']
             vprint("Calculate percentage difference...")
-            pcnt_diff = 100.0 * mean_diff / old['mean']
+            if old['mean']:
+                pcnt_diff = 100.0 * mean_diff / old['mean']
+            else:
+                pcnt_diff = 0.0
         vprint("Calculate the t-test value...")
         (t_value, conf) = stats.ttest_ind(old_data[idx], new_data[idx])
         vprint("Calculate the confidence...")
